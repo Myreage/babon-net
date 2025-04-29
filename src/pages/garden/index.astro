@@ -1,0 +1,54 @@
+---
+import BaseHead from "../../components/BaseHead.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
+import { getCollection } from "astro:content";
+
+const notes = await getCollection("garden");
+const tags = notes.flatMap((note) => note.data.tags).filter(Boolean);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			main {
+				width: 960px;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section>
+				<h3>Tags</h3>
+				<ul>
+					{
+						tags.map((tag) => (
+							<li>
+								<a href={`/garden/tags/${tag}`}>
+									<p>{tag}</p>
+								</a>
+							</li>
+						))
+					}
+				</ul>
+				<h3>Notes</h3>
+				<ul>
+					{
+						notes.map((note) => (
+							<li>
+								<a href={`/garden/${note.id}/`}>
+									<p>{note.data.title}</p>
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
